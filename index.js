@@ -47,6 +47,7 @@ async function run() {
       
       // Convert the string id to ObjectId
       const query = { _id: new ObjectId(deleteUser) };
+      
     
       try {
         const result = await userCollection.deleteOne(query);
