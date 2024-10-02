@@ -3,6 +3,7 @@ require('dotenv').config()
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 5000 ;
+const { ObjectId } = require('mongodb');
 
 
 app.use(cors()) ;
@@ -38,6 +39,26 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     })
+
+
+    app.delete('/users/:id', async (req, res) => {
+      const deleteUser = req.params.id;
+      console.log(deleteUser);
+      
+      // Convert the string id to ObjectId
+      const query = { _id: new ObjectId(deleteUser) };
+    
+      try {
+        const result = await userCollection.deleteOne(query);
+        if (result.deletedCount === 1) {
+          res.send({ message: 'User deleted successfully' });
+        } else {
+          res.status(404).send({ message: 'User not found' });
+        }
+      } catch (error) {
+        res.status(500).send({ message: 'Error deleting user', error });
+      }
+    });
 
 
     app.post("/users", async (req, res) => {
