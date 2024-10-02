@@ -32,12 +32,27 @@ async function run() {
 
     const userCollection = client.db('usersDB2024').collection('users')
 
-    app.post("/users", (req, res) => {
-      const user = req.body;
-      console.log(user)
-      const result = userCollection.insertOne(user)
+
+    app.get('/users', async(req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
       res.send(result)
     })
+
+
+    app.post("/users", async (req, res) => {
+      try {
+        const user = req.body;
+        console.log(user);
+        
+        const result = await userCollection.insertOne(user);  // Use await for async operation
+        res.send(result);
+      } catch (error) {
+        console.error("Error inserting user:", error);
+        res.status(500).send({ error: "An error occurred while inserting the user." });
+      }
+    });
+    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
