@@ -47,6 +47,12 @@ async function run() {
       res.send(result)
     })
 
+    app.delete('/coffee/:id', async(req, res) =>{
+      const _id = req.params.id;
+      const query = { _id: new ObjectId(_id)}
+      const result = await coffeeCollection.deleteOne(query)
+      res.send(result)
+    })
 
     app.get('/users', async(req, res) => {
       const cursor = userCollection.find();
